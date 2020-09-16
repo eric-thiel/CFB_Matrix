@@ -33,6 +33,8 @@ team_abbrevs = c(unique(q$Team))
 
 
 years = c("2019","2020")
+
+stats_to_choose = c("Targets","Passes Thrown","Runs")
 ui = shinyUI(
   pageWithSidebar(
     headerPanel("CFB Shit")
@@ -47,7 +49,13 @@ ui = shinyUI(
                    selectInput("Year",label = h3("Year Select"),
                                choices = (years),
                                hr(),)
+                 ),
+                 wellPanel(
+                   selectInput("Stat",label = h3("Stat Select"),
+                               choices = (stats_to_choose),
+                               hr(),)
                  )
+                 
     )
     ,
     
