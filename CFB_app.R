@@ -90,7 +90,7 @@ server = shinyServer(
      
       
       datatable(df_data, selection = "single",class = 'cell-border stripe',
-                options=list( autoWidth = TRUE, rownames = FALSE,
+                options=list(autoWidth = TRUE, rownames = FALSE, pageLength = 25,
                               columnDefs = list(list(visible=FALSE)),
                               className = 'dt-center', targets = "_all"))
       
