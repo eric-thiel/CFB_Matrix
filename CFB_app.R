@@ -1,5 +1,8 @@
 ### function to put stats online
 
+### add passing attempts and rushing attempts????????????????
+### big brain SZN
+
 
 library("shiny")   
 library(DT)
