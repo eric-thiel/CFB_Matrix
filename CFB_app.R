@@ -22,8 +22,13 @@ header.true <- function(df) {
   names(df) <- as.character(unlist(df[1,]))
   df[-1,]
 }
+q = get_gamelog_data()
 
-team_abbrevs = c("Alabama","LSU","West Virginia")
+Encoding(q$Team) <- "UTF-8"
+q$Team = iconv(q$Team, "UTF-8", "UTF-8",sub='') ## replace any non UTF-8 by ''
+team_abbrevs = c(unique(q$Team))
+
+
 years = c("2019","2020")
 ui = shinyUI(
   pageWithSidebar(
