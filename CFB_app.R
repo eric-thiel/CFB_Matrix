@@ -39,7 +39,7 @@ stats_to_choose = c("Targets","Passes Thrown","Runs")
 
 ui = shinyUI(
   pageWithSidebar(
-    headerPanel("CFB Shit")
+    headerPanel("College Football Stats By Game")
     ,
     sidebarPanel(width=2,
                  wellPanel(
@@ -77,11 +77,6 @@ server = shinyServer(
        df = subset(df, df$Team == input$Teams)
        df = subset(df, df$year == input$Year)
        df = subset(df, df$choice == input$Stat)
-       
-       df = subset(df, df$Team == "West Virginia")
-       df = subset(df, df$year == "2020")
-       df = subset(df, df$choice == "Targets")
-       
       j = df %>% select(athlete, attempts, Team, Opponent, Team_score, Opponent_score, week)
       j = j %>% arrange(attempts)
       
