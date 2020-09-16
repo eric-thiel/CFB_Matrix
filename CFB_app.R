@@ -18,25 +18,27 @@ get_gamelog_data = function()
   return(df)
 }
 
-
-
 header.true <- function(df) {
   names(df) <- as.character(unlist(df[1,]))
   df[-1,]
 }
 
-team_abbrevs = c("ATL","CHI","CON","DAL","IND","LAS","LVA","MIN",
-                 "NYL","PHO","SEA","WAS")
+team_abbrevs = c("Alabama","LSU","West Virginia")
+years = c("2019","2020")
 ui = shinyUI(
   pageWithSidebar(
     headerPanel("CFB Shit")
     ,
     sidebarPanel(width=2,
                  wellPanel(
-                   radioButtons("Teams", label = h3("Team Select"),
-                                choices =(team_abbrevs
-                                ), 
-                                selected = "ATL"),
+                   selectInput("Teams", label = h3("Team Select"),
+                                choices =(team_abbrevs), 
+                               hr(), ),
+                 ),
+                 wellPanel(
+                   selectInput("Year",label = h3("Year Select"),
+                               choices = (years),
+                               hr(),)
                  )
     )
     ,
@@ -54,40 +56,35 @@ server = shinyServer(
     df = get_gamelog_data()
     
     output$mytable = DT::renderDataTable({   
-      df = subset(df, df$TeamAbbreviation == input$Teams)
-      
-      j = df %>% select(Names, started, matchup, description, game_number)
-      
-      reference_df = j %>%
-        spread(Names, started)
-      reference_df = reference_df %>% arrange(game_number)
-      reference_df$game_number = NULL
-      
-      j = df %>% select(Names, Minutes, matchup, description, game_number)
+       df = subset(df, df$Team == input$Teams)
+       df = subset(df, df$year == input$Year)
+
+      j = df %>% select(athlete, sum_targets, Team, Opponent, Team_score, Opponent_score, week)
+      j = j %>% arrange(sum_targets)
       
       df_data = j %>%
-        spread(Names, Minutes)
-      df_data = df_data %>% arrange(game_number)
-      df_data$game_number = NULL
+        spread(athlete, sum_targets)
+      df_data = df_data %>% arrange(week)
       
+      holder = df_data %>% select(Team, Opponent, Team_score, Opponent_score, week)
+      excluded_vars = c("Team","Opponent","Team_score","Opponent_score","week")
       
-      joinerino = cbind(df_data, reference_df)
+      holder2 = select(df_data, -one_of(excluded_vars))
+      
+      holder2 <- holder2[,names(sort(colSums(holder2, na.rm = TRUE), decreasing = TRUE))]
+      
+      df_data = cbind(holder, holder2)
+      joinerino = df_data
       
       
       datatable(joinerino)
       
-      invisible_start = ncol(df_data)+1
-      invisible_end = ncol(joinerino)+1-1
+     
       
-      visible_start = 1
-      visible_end = ncol(df_data)+1-1
-      
-      datatable(cbind(df_data,reference_df), selection = "single",class = 'cell-border stripe',
+      datatable(df_data, selection = "single",class = 'cell-border stripe',
                 options=list( autoWidth = TRUE, rownames = FALSE,
-                              columnDefs = list(list(visible=FALSE, targets=c(invisible_start:invisible_end))),
-                              className = 'dt-center', targets = "_all"))%>%
-        formatStyle(visible_start:visible_end, valueColumns=invisible_start:invisible_end,
-                    color = JS("value < 0 ? 'red' : value > 0 ? 'blue' : 'black'"))
+                              columnDefs = list(list(visible=FALSE)),
+                              className = 'dt-center', targets = "_all"))
       
     })
   })
