@@ -18,6 +18,7 @@ cfbets_Sheet1$kelly = ifelse(cfbets_Sheet1$bet == "field goal",
   (((cfbets_Sheet1$td-1)*cfbets_Sheet1$prob_td) - (1-cfbets_Sheet1$prob_td)) / (cfbets_Sheet1$td - 1)
 ,0))
 
-cfbets_Sheet1$kelly = cfbets_Sheet1$kelly *0.25*1000
+cfbets_Sheet1$kelly = cfbets_Sheet1$kelly *0.25*800
 cfbets_Sheet1$kelly = round(cfbets_Sheet1$kelly,0)
 
+write.csv(cfbets_Sheet1, file ="betstoday1.csv")
