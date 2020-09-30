@@ -32,7 +32,7 @@ q$Team = iconv(q$Team, "UTF-8", "UTF-8",sub='') ## replace any non UTF-8 by ''
 team_abbrevs = c(unique(q$Team))
 
 
-years = c("2019","2020")
+years = c("2020","2019")
 
 stats_to_choose = c("Targets","Passes Thrown","Runs")
 
@@ -49,7 +49,7 @@ ui = shinyUI(
                  ),
                  wellPanel(
                    selectInput("Year",label = h3("Year Select"),
-                               choices = (years), selected = "2020",
+                               choices = (years),
                                hr(),)
                  ),
                  wellPanel(
@@ -84,7 +84,7 @@ server = shinyServer(
         spread(athlete, attempts)
       df_data = df_data %>% arrange(week)
       
-      holder = df_data %>% select(Team, Opponent, Team_score, Opponent_score, week)
+      holder = df_data %>% dplyr::select(Team, Opponent, Team_score, Opponent_score, week)
       excluded_vars = c("Team","Opponent","Team_score","Opponent_score","week")
       
       holder2 = select(df_data, -one_of(excluded_vars))
