@@ -21,6 +21,13 @@ get_gamelog_data = function()
   return(df)
 }
 
+get_longest_reception = function()
+{
+  df = vroom::vroom("http://raw.githubusercontent.com/eric-thiel/CFB_Matrix/master/longest_reception_summary.csv.gz")
+  return(df)
+}
+
+
 header.true <- function(df) {
   names(df) <- as.character(unlist(df[1,]))
   df[-1,]
@@ -34,7 +41,7 @@ team_abbrevs = c(unique(q$Team))
 
 years = c("2020","2019")
 
-stats_to_choose = c("Targets","Passes Thrown","Runs")
+stats_to_choose = c("Targets","Passes Thrown","Runs","Ceilings")
 
 
 ui = shinyUI(
@@ -72,8 +79,23 @@ server = shinyServer(
   function(input,output,session){
     
     df = get_gamelog_data()
+    gf = get_longest_reception()
+    
     
     output$mytable = DT::renderDataTable({   
+      if(input$Stat == "Ceilings"){
+        gf = subset(gf, gf$team == input$Teams)
+        gf = gf %>% select(targeted, mean_reception, total_targs, games, targs_per_game)
+        gf = gf %>% arrange(-total_targs)
+        gf$mean_reception = round(gf$mean_reception, 1)
+        gf = gf %>% rename("Avg Reception Length"="mean_reception")
+        datatable(gf, selection = "single",class = 'cell-border stripe',
+                  options=list(autoWidth = TRUE, rownames = FALSE, pageLength = 25,
+                               columnDefs = list(list(visible=FALSE)),
+                               className = 'dt-center', targets = "_all"))
+        
+      }
+      else{
        df = subset(df, df$Team == input$Teams)
        df = subset(df, df$year == input$Year)
        df = subset(df, df$choice == input$Stat)
@@ -103,7 +125,7 @@ server = shinyServer(
                 options=list(autoWidth = TRUE, rownames = FALSE, pageLength = 25,
                               columnDefs = list(list(visible=FALSE)),
                               className = 'dt-center', targets = "_all"))
-      
+      }
     })
   })
 
