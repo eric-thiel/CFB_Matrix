@@ -49,7 +49,7 @@ ui = shinyUI(
                  ),
                  wellPanel(
                    selectInput("Year",label = h3("Year Select"),
-                               choices = (years),
+                               choices = (years), selected = "2020",
                                hr(),)
                  ),
                  wellPanel(
