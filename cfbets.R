@@ -106,6 +106,96 @@ first_score$first_score = as.numeric(first_score$first_score)
 first_score$first_score = ifelse(first_score$first_score == 6 | first_score$first_score == 8, 7, first_score$first_score)
 
 
+first_score$home_td = ifelse(first_score$team_scored == first_score$home_team & first_score$first_score == 7, 1, 0)
+first_score$home_fg = ifelse(first_score$team_scored == first_score$home_team & first_score$first_score == 3, 1, 0)
+
+first_score$away_td = ifelse(first_score$team_scored == first_score$away_team & first_score$first_score == 7, 1, 0)
+first_score$away_fg = ifelse(first_score$team_scored == first_score$away_team & first_score$first_score == 3, 1, 0)
+
+
+
+post_home_td = first_score %>% dplyr::select(home_td, spread, overunder)
+
+post_home_td$home_td = as.factor(post_home_td$home_td)
+
+library(caret)
+
+# define training control
+train_control <- trainControl(method = "cv", number = 10)
+
+# train the model on training set
+model_home_td <- train(home_td ~ .,
+               data = post_home_td,
+               trControl = train_control,
+               method = "glm",
+               family=binomial())
+
+summary(model_home_td$results)
+
+post_home_fg = first_score %>% dplyr::select(home_fg, spread, overunder)
+
+post_home_fg$home_fg = as.factor(post_home_fg$home_fg)
+
+library(caret)
+
+# define training control
+train_control <- trainControl(method = "cv", number = 10)
+
+# train the model on training set
+model_home_fg <- train(home_fg ~ .,
+                       data = post_home_fg,
+                       trControl = train_control,
+                       method = "glm",
+                       family=binomial())
+
+summary(model_home_fg$results)
+
+
+
+
+
+
+
+
+post_away_td = first_score %>% dplyr::select(away_td, spread, overunder)
+
+post_away_td$away_td = as.factor(post_away_td$away_td)
+
+library(caret)
+
+# define training control
+train_control <- trainControl(method = "cv", number = 10)
+
+# train the model on training set
+model_away_td <- train(away_td ~ .,
+                       data = post_away_td,
+                       trControl = train_control,
+                       method = "glm",
+                       family=binomial())
+
+summary(model_away_td$results)
+
+post_away_fg = first_score %>% dplyr::select(away_fg, spread, overunder)
+
+post_away_fg$away_fg = as.factor(post_away_fg$away_fg)
+
+library(caret)
+
+# define training control
+train_control <- trainControl(method = "cv", number = 10)
+
+# train the model on training set
+model_away_fg <- train(away_fg ~ .,
+                       data = post_away_fg,
+                       trControl = train_control,
+                       method = "glm",
+                       family=binomial())
+
+summary(model_away_fg$results)
+
+
+
+
 
 
 
