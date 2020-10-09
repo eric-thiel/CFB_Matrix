@@ -62,7 +62,7 @@ cfbets_team_score$kelly = ifelse(cfbets_team_score$bet == "home td",
                                    ,0
                                ))))
 
-cfbets_team_score$kelly = cfbets_team_score$kelly *0.25*1000
+cfbets_team_score$kelly = cfbets_team_score$kelly *0.25*6000
 cfbets_team_score$kelly = round(cfbets_team_score$kelly,0)
 cfbets_team_score$kelly = ifelse(cfbets_team_score$kelly <0, 0, cfbets_team_score$kelly)
 
