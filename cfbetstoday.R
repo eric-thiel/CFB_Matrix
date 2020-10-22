@@ -1,5 +1,5 @@
 library(googlesheets4)
-
+library(rowr)
 gs4_auth(email = "eric.thiel96@gmail.com")
 cfbets_Sheet1 = read_sheet("https://docs.google.com/spreadsheets/d/117mR0UyE8VscLT6y7OkmcOkN8X_2TyYM-CKGfX_8pqM/edit#gid=0",
                    "Sheet1")
@@ -12,6 +12,7 @@ cfbets_team_score = read_sheet("https://docs.google.com/spreadsheets/d/117mR0UyE
                            "to_score")
 
 check = predict(model_home_td, cfbets_team_score, type = "prob")
+cfbets_team_score = subset(cfbets_team_score, !is.na(cfbets_team_score$spread))
 cfbets_team_score = cbind(cfbets_team_score, check)
 cfbets_team_score = cfbets_team_score %>% rename("home_td"="1")
 cfbets_team_score$`0` = NULL
@@ -68,7 +69,7 @@ cfbets_team_score$kelly = ifelse(cfbets_team_score$kelly <0, 0, cfbets_team_scor
 
 
 
-
+cfbets_Sheet1 = subset(cfbets_Sheet1, !is.na(cfbets_Sheet1$spread))
 cfbets_Sheet1 = cbind(cfbets_Sheet1, ggs)
 cfbets_Sheet1 = cfbets_Sheet1 %>% rename("prob_fg" = "0", "prob_td"="1")
 
@@ -83,7 +84,7 @@ cfbets_Sheet1$kelly = ifelse(cfbets_Sheet1$bet == "field goal",
   (((cfbets_Sheet1$td-1)*cfbets_Sheet1$prob_td) - (1-cfbets_Sheet1$prob_td)) / (cfbets_Sheet1$td - 1)
 ,0))
 
-cfbets_Sheet1$kelly = cfbets_Sheet1$kelly *0.25*1000
+cfbets_Sheet1$kelly = cfbets_Sheet1$kelly *0.25*1500
 cfbets_Sheet1$kelly = round(cfbets_Sheet1$kelly,0)
 
 write.csv(cfbets_Sheet1, file ="betstoday1.csv")
