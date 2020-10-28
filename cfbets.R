@@ -15,7 +15,7 @@ library(nnet)
 library(xgboost)
 library(tidyverse)
 
-library(rstan)
+#library(rstan)
 library(lme4)
 library(tidyverse)
 library(vip)
