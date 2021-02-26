@@ -40,6 +40,9 @@ temp = FCS_pbp %>% mutate(
 ) %>% fill(possession_team)
 
 
+## remove game id 10, strange charting, Against FLA ST anyways so its fine.
+temp = subset(temp, game_id !=10)
+
 summary_rush = temp %>% filter(run == TRUE) %>% group_by(game_id, rush_player, possession_team)%>%
   summarise(rush_yds = sum(yardage_gained, na.rm = TRUE), tds = sum(rush_td, na.rm = TRUE), attempts = n())
 
