@@ -85,6 +85,7 @@ server = shinyServer(
     output$mytable = DT::renderDataTable({   
       if(input$Stat == "Ceilings"){
         gf = subset(gf, gf$team == input$Teams)
+        gf = subset(gf, gf$year == input$Year)
         gf = gf %>% select(targeted, mean_reception, total_targs, games, targs_per_game)
         gf = gf %>% arrange(-total_targs)
         gf$mean_reception = round(gf$mean_reception, 1)
