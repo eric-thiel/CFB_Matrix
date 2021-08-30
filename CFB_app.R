@@ -39,7 +39,7 @@ q$Team = iconv(q$Team, "UTF-8", "UTF-8",sub='') ## replace any non UTF-8 by ''
 team_abbrevs = c(unique(q$Team))
 
 
-years = c("2020","2019")
+years = c("2021","2020","2019")
 
 stats_to_choose = c("Targets","Passes Thrown","Runs","Ceilings")
 
