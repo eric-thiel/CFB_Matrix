@@ -114,11 +114,15 @@ server = shinyServer(
        df = subset(df, df$Team == input$Teams)
        df = subset(df, df$year == input$Year)
        df = subset(df, df$choice == input$Stat)
+      
+       
+       
       j = df %>% select(athlete, attempts, Team, Opponent, Team_score, Opponent_score, week)
       j = j %>% arrange(attempts)
       
       df_data = j %>%
         spread(athlete, attempts)
+      
       df_data = df_data %>% arrange(week)
       
       holder = df_data %>% dplyr::select(Team, Opponent, Team_score, Opponent_score, week)
